@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import os
+from ml.services.web_api_service import WebAPIService
 from ml.models.two_towers_model import (
     TwoTowerModel, user_model, movie_model
 )
@@ -50,8 +51,7 @@ def get_best_k_films_for_user(user_id, k=10):
         liked_genres = user_genres_avg[user_genres_avg > 3.8].index.str.replace('_avg', '').tolist()
         liked_genres_set = set(liked_genres)
     else:
-        # TODO: Fetch data from web service API
-        # user_features = TrainingDataService.get_user_features(user_id)[1:]  # Bỏ user_id
+        user_features = WebAPIService.get_user_features(user_id)[1:]
         user_features = [0, 0, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0]
         genre_cols = user_features_df.columns[1:].str.replace('_avg', '')
         liked_genres = [

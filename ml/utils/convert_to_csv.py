@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+from ml.services.web_api_service import WebAPIService
 
 DB_DATA_PATH = "ml/data/database_data"
 
@@ -7,8 +8,7 @@ GENRES = []
 
 def convert_db_user_features_to_csv():
     # Lấy dữ liệu từ DB
-    # TODO: Fetch data (get_all_user_feature) from web service API
-    user_features_data = []
+    user_features_data = WebAPIService.get_all_user_features()
     db_genre_columns = [f"{name.lower().replace('-', '_').replace(' ', '_')}_avg" for _, name in GENRES]
     
     user_features_df = pd.DataFrame(
@@ -32,8 +32,7 @@ def convert_db_user_features_to_csv():
 
 def convert_db_ratings_to_csv():
     # Lấy dữ liệu từ DB
-    # TODO: Fetch data (get_ratings) from web service API
-    ratings_data = []
+    ratings_data = WebAPIService.get_ratings()
     ratings_df = pd.DataFrame(ratings_data, columns=['userId', 'movieId', 'timestamp'])
     
     ratings_df['rating'] = 5
@@ -46,8 +45,7 @@ def convert_db_ratings_to_csv():
 
 def convert_db_favourites_movies_to_csv():
     # Lấy dữ liệu từ DB
-    # TODO: Fetch data (get_favourite_movies) from web service API
-    favourites_data = []
+    favourites_data = WebAPIService.get_favourite_movies()
     favourites_df = pd.DataFrame(favourites_data, columns=['movieId', 'title', 'genres'])
     
     # Lưu ra file

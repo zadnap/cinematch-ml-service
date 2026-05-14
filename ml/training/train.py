@@ -4,13 +4,13 @@ import matplotlib.pyplot as plt
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 
 # --- LẤY DỮ LIỆU TỪ DATABASE ---
-# from ml.training.sync_data_from_db import (
-#     sync_database_to_training_data
-# )
+from ml.training.sync_data_from_db import (
+    sync_database_to_training_data
+)
 
-# print("=== BƯỚC 1: ĐỒNG BỘ DỮ LIỆU TỪ DB ===")
-# sync_database_to_training_data()
-# print("Đã cập nhật xong các file CSV tĩnh (movies.csv, user_features.csv, ...)")
+print("=== BƯỚC 1: ĐỒNG BỘ DỮ LIỆU TỪ DB ===")
+sync_database_to_training_data()
+print("Đã cập nhật xong các file CSV tĩnh (movies.csv, user_features.csv, ...)")
 
 # --- LẤY DỮ LIỆU TỪ FILE DATASET_LOADER ---
 from ml.training.dataset_loader import (
