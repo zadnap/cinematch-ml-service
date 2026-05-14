@@ -4,7 +4,27 @@ from ml.services.web_api_service import WebAPIService
 
 DB_DATA_PATH = "ml/data/database_data"
 
-GENRES = []
+GENRES = [
+    (28, "Action"),
+    (12, "Adventure"),
+    (16, "Animation"),
+    (35, "Comedy"),
+    (80, "Crime"),
+    (99, "Documentary"),
+    (18, "Drama"),
+    (10751, "Children"),
+    (14, "Fantasy"),
+    (36, "History"),
+    (27, "Horror"),
+    (10402, "Musical"),
+    (9648, "Mystery"),
+    (10749, "Romance"),
+    (878, "Sci-fi"),
+    (10770, "TV Movie"),
+    (53, "Thriller"),
+    (10752, "War"),
+    (37, "Western"),
+]
 
 def convert_db_user_features_to_csv():
     # Lấy dữ liệu từ DB
@@ -30,6 +50,7 @@ def convert_db_user_features_to_csv():
     # Lưu ra file
     user_features_df.to_csv(os.path.join(DB_DATA_PATH, 'db_user_features.csv'), index=False)
 
+
 def convert_db_ratings_to_csv():
     # Lấy dữ liệu từ DB
     ratings_data = WebAPIService.get_ratings()
@@ -42,6 +63,7 @@ def convert_db_ratings_to_csv():
     
     # Lưu ra file
     ratings_df.to_csv(os.path.join(DB_DATA_PATH, 'db_ratings.csv'), index=False)
+
 
 def convert_db_favourites_movies_to_csv():
     # Lấy dữ liệu từ DB

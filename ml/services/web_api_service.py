@@ -22,7 +22,7 @@ class WebAPIService:
 
         response.raise_for_status()
 
-        return response.json()
+        return response.json()["data"]
 
 
     @staticmethod
@@ -34,7 +34,7 @@ class WebAPIService:
 
         response.raise_for_status()
 
-        return response.json()
+        return response.json()["data"]
 
 
     @staticmethod
@@ -46,7 +46,7 @@ class WebAPIService:
 
         response.raise_for_status()
 
-        return response.json()
+        return response.json()["data"]
 
 
     @staticmethod
@@ -58,4 +58,4 @@ class WebAPIService:
 
         response.raise_for_status()
 
-        return response.json()
+        return response.json()["data"]
