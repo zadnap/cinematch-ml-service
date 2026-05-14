@@ -1,0 +1,4 @@
+-r requirements.base.txt
+
+tensorflow==2.15.0
+matplotlib==3.10.6

@@ -1,0 +1,4 @@
+-r requirements.base.txt
+
+tensorflow-cpu==2.15.0
+gunicorn==25.3.0
