@@ -68,16 +68,16 @@ movies_df = pd.read_csv(
     os.path.join(RAW_DATA_PATH, "movies.csv")
 )
 
-ratings_df = pd.read_csv(
-    os.path.join(RAW_DATA_PATH, "ratings.csv")
-)
-
 movie2movie_encoded = {
     x: i for i, x in enumerate(movies_df['movieId'].unique())
 }
 
 
 if __name__ == "__main__":
+    ratings_df = pd.read_csv(
+        os.path.join(RAW_DATA_PATH, "ratings.csv")
+    )
+
 
     # =========================
     # Encode User IDs
