@@ -7,17 +7,28 @@ load_dotenv()
 WEB_API_URL = os.getenv("WEB_API_URL")
 
 if not WEB_API_URL:
-    raise ValueError("Missing WEB_API_URL environment variable")
+    raise ValueError("Missing WEB_API_URL")
 
 
 class WebAPIService:
-    TIMEOUT = 30
+    TIMEOUT = (5, 60)
+
+    SESSION = requests.Session()
+
+    @staticmethod
+    def _build_url(endpoint):
+        return (
+            f"{WEB_API_URL.rstrip('/')}/"
+            f"{endpoint.lstrip('/')}"
+        )
 
     @staticmethod
     def _get(endpoint):
+        url = WebAPIService._build_url(endpoint)
+
         try:
-            response = requests.get(
-                f"{WEB_API_URL}{endpoint}",
+            response = WebAPIService.SESSION.get(
+                url,
                 timeout=WebAPIService.TIMEOUT
             )
 
@@ -26,30 +37,30 @@ class WebAPIService:
             json_data = response.json()
 
             if "data" not in json_data:
-                print(f"Missing data field: {endpoint}")
+                print(f"[INVALID RESPONSE] {endpoint}")
                 return None
 
             return json_data["data"]
 
         except requests.exceptions.Timeout:
             print(f"[TIMEOUT] {endpoint}")
-            return None
 
         except requests.exceptions.ConnectionError:
             print(f"[CONNECTION ERROR] {endpoint}")
-            return None
 
         except requests.exceptions.HTTPError as e:
             print(f"[HTTP ERROR] {endpoint}: {e}")
-            return None
+
+        except ValueError:
+            print(f"[INVALID JSON] {endpoint}")
 
         except requests.exceptions.RequestException as e:
             print(f"[REQUEST ERROR] {endpoint}: {e}")
-            return None
 
         except Exception as e:
             print(f"[UNKNOWN ERROR] {endpoint}: {e}")
-            return None
+
+        return None
 
 
     @staticmethod
