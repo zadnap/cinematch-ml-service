@@ -53,8 +53,12 @@ def get_best_k_films_for_user(user_id, k=10):
         liked_genres = user_genres_avg[user_genres_avg > 3.8].index.str.replace('_avg', '').tolist()
         liked_genres_set = set(liked_genres)
     else:
-        user_features = WebAPIService.get_user_features(user_id)[1:]
-        user_features = [0, 0, 0, 0, 4, 0, 0, 4, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0]
+        user_features = WebAPIService.get_user_features(user_id)
+        if user_features is None:
+            print(f"Không lấy được user features cho user {user_id}")
+            return []
+        user_features = user_features[1:]
+
         genre_cols = user_features_df.columns[1:].str.replace('_avg', '')
         liked_genres = [
             genre for genre, score in zip(genre_cols, user_features) 
