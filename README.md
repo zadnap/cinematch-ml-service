@@ -7,4 +7,85 @@ sdk: docker
 app_port: 7860
 ---
 
-Movie recommendation ML service.
+## CineMatch - Movie Recommendation System
+
+### Overview
+
+- A movie recommendation web application (used to be) built as part of [The Odin Project](https://www.theodinproject.com/lessons/node-path-react-new-shopping-cart)
+  curriculum. Now it serves as recommendation core for the application. See [CineMatch Client](https://github.com/zadnap/cinematch-client) and [CineMatch API](https://github.com/zadnap/cinematch-api) for more information.
+- This project focuses on building a movie recommendation API by integrating MovieLens and TMDB data, implementing content-based and hybrid recommendation techniques, and designing a scalable backend service using Flask to deliver personalized movie suggestions.
+- See the project in action: [CineMatch](https://cinematch-client.vercel.app).
+
+### Installation & Usage
+
+1. Clone repository
+
+   ```bash
+   git clone https://github.com/zadnap/cinematch-ml-service.git
+   ```
+
+2. Create virtual environment
+
+   ```bash
+   python3.11 -m venv venv
+   ```
+
+3. Activate virtual environment
+
+- macOS / Linux:
+
+  ```bash
+  source venv/bin/activate
+  ```
+
+- Windows:
+
+  ```bash
+  venv\Scripts\activate
+  ```
+
+4. Install dependencies
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. Create an .env file with content
+
+   ```bash
+   HF_TOKEN=<your_hf_token>
+   REPO_ID=<your_hf_repo_id>
+   CORS_ORIGINS=<web_service_url>
+   WEB_API_URL=<web_service_url>
+   ```
+
+6. Run the server
+
+   ```bash
+   flask run
+   ```
+
+### Training & Uploading Artifacts
+
+1. Prepare data
+
+- Download raw data from [Drive Folder](https://drive.google.com/drive/folders/1v8krf9hGEBqCKdN5wiwGD2WomEmvnqJQ?usp=share_link) and add them to ml/data/raw_data.
+- Create folder ml/artifacts, ml/data/processed_data, ml/data/database_data
+
+2. Preprocess raw data
+
+   ```bash
+   python -m ml.training.data_preprocessing
+   ```
+
+3. Train the model
+
+   ```bash
+   python -m ml.training.train
+   ```
+
+4. Upload artifacts to Hugging Face Hub
+
+   ```bash
+   python scripts/upload_artifacts.py
+   ```
