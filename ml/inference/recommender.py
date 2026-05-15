@@ -7,7 +7,7 @@ from ml.models.two_towers_model import (
 )
 
 from ml.training.dataset_loader import (
-    NUM_MOVIES, NUM_USERS,
+    NUM_MOVIES,  
     movie_dataset,
     interactions,
     user_features_df,
@@ -17,6 +17,8 @@ from ml.training.dataset_loader import (
 from ml.training.data_preprocessing import (
     movie2movie_encoded, movies_df,
 )
+
+ID_OFFSET = 200948
 
 ARTIFACTS_PATH = "ml/artifacts"
 PROCESSED_DATA_PATH = "ml/data/processed_data"
@@ -42,10 +44,10 @@ GLOBAL_MOVIE_SCORES = pd.read_csv(
 def get_best_k_films_for_user(user_id, k=10):
     liked_genres_set = set()
     # Kiểm tra xem user_id có trong bảng user features chưa
-    user_exists = (user_features_df['user_id'] == user_id + NUM_USERS - 1).any()
+    user_exists = (user_features_df['user_id'] == user_id + ID_OFFSET).any()
     
     if user_exists:
-        user_row = user_features_df[user_features_df['user_id'] == user_id + NUM_USERS - 1].iloc[0]
+        user_row = user_features_df[user_features_df['user_id'] == user_id + ID_OFFSET].iloc[0]
         genre_columns = [col for col in user_row.index if col.endswith('_avg')]
         user_genres_avg = user_row[genre_columns]
         liked_genres = user_genres_avg[user_genres_avg > 3.8].index.str.replace('_avg', '').tolist()
@@ -154,7 +156,7 @@ def normal_recommendation(user_id, top_k=10, ratio=0.85):
 def recommend_movies(user_id, top_k=200):
     is_cold_start = False
 
-    if user_id + NUM_USERS - 1 not in user_features_df['user_id'].values:
+    if user_id + ID_OFFSET not in user_features_df['user_id'].values:
         print(f"User ID {user_id} không tồn tại trong dữ liệu người dùng. Sử dụng phương pháp đề xuất cold-start.")
         is_cold_start = True
         top_tmdb_ids, final_real_ids, model_real_ids = cold_start_recommendation(user_id, top_k)
