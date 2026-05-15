@@ -64,13 +64,6 @@ class WebAPIService:
 
 
     @staticmethod
-    def get_user_features(user_id):
-        return WebAPIService._get(
-            f"/training-data/user-features/{user_id}"
-        )
-
-
-    @staticmethod
     def get_all_user_features():
         return WebAPIService._get(
             "/training-data/user-features/all"

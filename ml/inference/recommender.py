@@ -41,7 +41,7 @@ GLOBAL_MOVIE_SCORES = pd.read_csv(
     )
 )
 
-def get_best_k_films_for_user(user_id, k=10):
+def get_best_k_films_for_user(user_id, user_features, k=10):
     liked_genres_set = set()
     # Kiểm tra xem user_id có trong bảng user features chưa
     user_exists = (user_features_df['user_id'] == user_id + ID_OFFSET).any()
@@ -53,12 +53,6 @@ def get_best_k_films_for_user(user_id, k=10):
         liked_genres = user_genres_avg[user_genres_avg > 3.8].index.str.replace('_avg', '').tolist()
         liked_genres_set = set(liked_genres)
     else:
-        user_features = WebAPIService.get_user_features(user_id)
-        if user_features is None:
-            print(f"Không lấy được user features cho user {user_id}")
-            return []
-        user_features = user_features[1:]
-
         genre_cols = user_features_df.columns[1:].str.replace('_avg', '')
         liked_genres = [
             genre for genre, score in zip(genre_cols, user_features) 
@@ -108,14 +102,14 @@ def mapping_movie_id_to_tmdb_id(movie_ids):
     )
     return result
 
-def cold_start_recommendation(user_id, top_k=10):
+def cold_start_recommendation(user_id, user_features, top_k=10):
     print(f"Đang thực hiện đề xuất cold-start cho User ID {user_id}...")
     # Lấy top K phim phổ biến nhất
-    best_k_film_ids = get_best_k_films_for_user(user_id, k=top_k)
+    best_k_film_ids = get_best_k_films_for_user(user_id, user_features, k=top_k)
     top_tmdb_ids = mapping_movie_id_to_tmdb_id(best_k_film_ids)
     return top_tmdb_ids, best_k_film_ids, []
 
-def normal_recommendation(user_id, top_k=10, ratio=0.85):
+def normal_recommendation(user_id, user_features, top_k=10, ratio=0.85):
     ratio_model = ratio
     num_from_model = int(top_k * ratio_model)
     num_from_niche = top_k - num_from_model
@@ -129,7 +123,7 @@ def normal_recommendation(user_id, top_k=10, ratio=0.85):
     encoded2real_movie_id = {encoded_val: real_id for real_id, encoded_val in movie2movie_encoded.items()}
     model_real_ids = [encoded2real_movie_id[encoded_id] for encoded_id in top_k_encoded_ids]
 
-    niche_real_ids_raw = get_best_k_films_for_user(user_id, k=num_from_niche * 3)
+    niche_real_ids_raw = get_best_k_films_for_user(user_id, user_features, k=num_from_niche * 3)
 
     top_tmdb_ids = []
     unique_niche_ids = []
@@ -157,16 +151,16 @@ def normal_recommendation(user_id, top_k=10, ratio=0.85):
     top_tmdb_ids = mapping_movie_id_to_tmdb_id(final_real_ids)
     return top_tmdb_ids, final_real_ids, model_real_ids[:num_from_model]
 
-def recommend_movies(user_id, top_k=200):
+def recommend_movies(user_id, user_features, top_k=200):
     is_cold_start = False
 
     if user_id + ID_OFFSET not in user_features_df['user_id'].values:
         print(f"User ID {user_id} không tồn tại trong dữ liệu người dùng. Sử dụng phương pháp đề xuất cold-start.")
         is_cold_start = True
-        top_tmdb_ids, final_real_ids, model_real_ids = cold_start_recommendation(user_id, top_k)
+        top_tmdb_ids, final_real_ids, model_real_ids = cold_start_recommendation(user_id, user_features, top_k)
     else:
         ratio = 0.85
-        top_tmdb_ids, final_real_ids, model_real_ids = normal_recommendation(user_id, top_k, ratio)
+        top_tmdb_ids, final_real_ids, model_real_ids = normal_recommendation(user_id, user_features, top_k, ratio)
     
     if __name__ == "__main__":
         print(f"\nTOP {top_k} PHIM DÀNH CHO USER {user_id}:")
