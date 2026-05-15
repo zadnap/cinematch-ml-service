@@ -11,51 +11,70 @@ if not WEB_API_URL:
 
 
 class WebAPIService:
-    TIMEOUT = 10
+    TIMEOUT = 30
+
+    @staticmethod
+    def _get(endpoint):
+        try:
+            response = requests.get(
+                f"{WEB_API_URL}{endpoint}",
+                timeout=WebAPIService.TIMEOUT
+            )
+
+            response.raise_for_status()
+
+            json_data = response.json()
+
+            if "data" not in json_data:
+                print(f"Missing data field: {endpoint}")
+                return None
+
+            return json_data["data"]
+
+        except requests.exceptions.Timeout:
+            print(f"[TIMEOUT] {endpoint}")
+            return None
+
+        except requests.exceptions.ConnectionError:
+            print(f"[CONNECTION ERROR] {endpoint}")
+            return None
+
+        except requests.exceptions.HTTPError as e:
+            print(f"[HTTP ERROR] {endpoint}: {e}")
+            return None
+
+        except requests.exceptions.RequestException as e:
+            print(f"[REQUEST ERROR] {endpoint}: {e}")
+            return None
+
+        except Exception as e:
+            print(f"[UNKNOWN ERROR] {endpoint}: {e}")
+            return None
+
 
     @staticmethod
     def get_user_features(user_id):
-        response = requests.get(
-            f"{WEB_API_URL}/training-data/user-features/{user_id}",
-            timeout=WebAPIService.TIMEOUT
+        return WebAPIService._get(
+            f"/training-data/user-features/{user_id}"
         )
-
-        response.raise_for_status()
-
-        return response.json()["data"]
 
 
     @staticmethod
     def get_all_user_features():
-        response = requests.get(
-            f"{WEB_API_URL}/training-data/user-features/all",
-            timeout=WebAPIService.TIMEOUT
+        return WebAPIService._get(
+            "/training-data/user-features/all"
         )
-
-        response.raise_for_status()
-
-        return response.json()["data"]
 
 
     @staticmethod
     def get_ratings():
-        response = requests.get(
-            f"{WEB_API_URL}/training-data/ratings",
-            timeout=WebAPIService.TIMEOUT
+        return WebAPIService._get(
+            "/training-data/ratings"
         )
-
-        response.raise_for_status()
-
-        return response.json()["data"]
 
 
     @staticmethod
     def get_favourite_movies():
-        response = requests.get(
-            f"{WEB_API_URL}/training-data/favourites",
-            timeout=WebAPIService.TIMEOUT
+        return WebAPIService._get(
+            "/training-data/favourites"
         )
-
-        response.raise_for_status()
-
-        return response.json()["data"]
