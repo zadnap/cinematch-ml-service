@@ -20,12 +20,7 @@ snapshot_download(
     repo_type="model",
     token=HF_TOKEN,
     local_dir="ml",
-    allow_patterns=[
-        "artifacts/*.h5",
-        "data/processed_data",
-        "data/raw_data/movies.csv",
-        "data/raw_data/links.csv",
-    ]
+    allow_patterns=["artifacts/*", "data/processed_data/*"]
 )
 
 print("Downloading successfully!")

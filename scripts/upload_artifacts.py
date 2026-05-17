@@ -20,14 +20,7 @@ upload_folder(
     repo_id=REPO_ID,
     repo_type="model",
     token=HF_TOKEN,
-
-    allow_patterns=[
-        "artifacts/*.h5",
-        "data/processed_data",
-        "data/raw_data/movies.csv",
-        "data/raw_data/links.csv",
-    ],
-
+    allow_patterns=["artifacts/*", "data/processed_data/*"]
     ignore_patterns=[
         "**/__pycache__/**",
         "**/*.pyc",
