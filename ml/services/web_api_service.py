@@ -12,8 +12,8 @@ if not WEB_API_URL:
 
 class WebAPIService:
     TIMEOUT = (5, 60)
-
     SESSION = requests.Session()
+    ID_OFFSET = 200947
 
     @staticmethod
     def _build_url(endpoint):
@@ -65,16 +65,23 @@ class WebAPIService:
 
     @staticmethod
     def get_all_user_features():
-        return WebAPIService._get(
+        data = WebAPIService._get(
             "/training-data/user-features/all"
         )
+    
+        if data is None:
+                return None
+
+        return [[row[0] + WebAPIService.ID_OFFSET] + row[1:] for row in data]
 
 
     @staticmethod
     def get_ratings():
-        return WebAPIService._get(
-            "/training-data/ratings"
-        )
+        data = WebAPIService._get("/training-data/ratings")
+        if data is None:
+            return None
+        
+        return [[row[0] + WebAPIService.ID_OFFSET] + row[1:] for row in data]
 
 
     @staticmethod

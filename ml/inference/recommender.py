@@ -4,14 +4,13 @@ from ml.utils.map_to_tmdb_id import map_to_tmdb_id
 from ml.training.data_preprocessing import movie2movie_encoded
 from ml.training.dataset_loader import interactions, user_features_df, movie_features_df
 from ml.engine.recommender_engine import REC_SYS
-
-ID_OFFSET = 200948
+from ml.services.web_api_service import WebAPIService
 
 ENCODED_TO_REAL_MOVIE_ID = {encoded_val: real_id for real_id, encoded_val in movie2movie_encoded.items()}
 
 def _get_best_k_films_by_genres(user_id, user_features, is_cold_start, k = 10):
     if not is_cold_start:
-        user_row = user_features_df[user_features_df['user_id'] == user_id + ID_OFFSET].iloc[0]
+        user_row = user_features_df[user_features_df['user_id'] == user_id + WebAPIService.ID_OFFSET].iloc[0]
         genre_columns = [col for col in user_row.index if col.endswith('_avg')]
         liked_genres = [col.replace('_avg', '') for col in genre_columns if user_row[col] > 3.8]
     else:
@@ -107,7 +106,7 @@ class RecommendationContext:
 
 
 def recommend_movies(user_id, user_features, top_k):
-    is_cold_start = (user_id + ID_OFFSET) not in user_features_df['user_id'].values
+    is_cold_start = (user_id + WebAPIService.ID_OFFSET) not in user_features_df['user_id'].values
     strategy = ColdStartRecommendationStrategy() if is_cold_start else NormalRecommendationStrategy(ratio=0.85)
     recommender = RecommendationContext(strategy)
         
