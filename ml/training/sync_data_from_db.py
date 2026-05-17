@@ -186,6 +186,8 @@ def sync_database_to_training_data():
         for col in genres_dummies.columns
     ]
 
+    genres_dummies = genres_dummies.T.groupby(level=0).max().T
+
     movies_df['year'] = movies_df['title'].apply(extract_year)
 
     movies_df['year'] = movies_df['year'].fillna(

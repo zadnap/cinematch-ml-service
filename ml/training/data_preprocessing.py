@@ -147,6 +147,8 @@ if __name__ == "__main__":
         for col in genres_dummies.columns
     ]
 
+    genres_dummies = genres_dummies.T.groupby(level=0).max().T
+
     # =========================
     # Extract Year
     # =========================
@@ -211,30 +213,18 @@ if __name__ == "__main__":
         .count()
     )
 
-    for genre in genres_dummies.columns:
+    genre_cols = list(genres_dummies.columns)
 
-        genre_ratings = merged_df['rating'].where(
-            merged_df[genre] == 1
-        )
+    weighted_genres = merged_df[genre_cols].multiply(merged_df['rating'], axis=0)
+    weighted_genres['user_id'] = merged_df['user_id']
 
-        sum_genre_ratings = (
-            genre_ratings
-            .groupby(merged_df['user_id'])
-            .sum()
-        )
+    sum_genre_ratings = weighted_genres.groupby('user_id').sum()
 
-        custom_avg_series = (
-            sum_genre_ratings
-            / total_ratings_per_user
-        )
+    user_genre_avgs = sum_genre_ratings.divide(total_ratings_per_user, axis=0).fillna(0.0)
 
-        avg_col_name = genre + '_avg'
-
-        user_features[avg_col_name] = (
-            user_features['user_id']
-            .map(custom_avg_series)
-            .fillna(0.0)
-        )
+    user_genre_avgs.columns = [f"{col}_avg" for col in user_genre_avgs.columns]
+    
+    user_features = pd.merge(user_features, user_genre_avgs, on='user_id', how='left').fillna(0.0)
 
     export_to_csv(
         user_features,
