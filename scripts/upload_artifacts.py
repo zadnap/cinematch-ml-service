@@ -23,10 +23,7 @@ upload_folder(
 
     allow_patterns=[
         "artifacts/*.h5",
-        "data/processed_data/movie_features.csv",
-        "data/processed_data/user_features.csv",
-        "data/processed_data/global_movie_scores.csv",
-        "data/processed_data/positive_interactions.csv",
+        "data/processed_data",
         "data/raw_data/movies.csv",
         "data/raw_data/links.csv",
     ],
