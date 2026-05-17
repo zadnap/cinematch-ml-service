@@ -3,9 +3,7 @@ import numpy as np
 import pandas as pd
 from ml.models.two_towers_model import TwoTowerModel, user_model, movie_model
 from ml.training.dataset_loader import NUM_MOVIES, movie_dataset
-
-ARTIFACTS_PATH = "ml/artifacts"
-PROCESSED_DATA_PATH = "ml/data/processed_data"
+from ml.constants import ARTIFACTS_PATH, PROCESSED_DATA_PATH
 
 class MovieRecommenderSystem:
     def __init__(self):
