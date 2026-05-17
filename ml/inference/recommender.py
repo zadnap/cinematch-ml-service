@@ -1,28 +1,24 @@
 import numpy as np
 from abc import ABC, abstractmethod
 from ml.utils.map_to_tmdb_id import map_to_tmdb_id
-from ml.training.data_preprocessing import movie2movie_encoded
-from ml.training.dataset_loader import interactions, user_features_df, movie_features_df
-from ml.engine.recommender_engine import REC_SYS
+from ml.inference.recommender_engine import REC_SYS
 from ml.services.web_api_service import WebAPIService
-
-ENCODED_TO_REAL_MOVIE_ID = {encoded_val: real_id for real_id, encoded_val in movie2movie_encoded.items()}
 
 def _get_best_k_films_by_genres(user_id, user_features, is_cold_start, k = 10):
     if not is_cold_start:
-        user_row = user_features_df[user_features_df['user_id'] == user_id + WebAPIService.ID_OFFSET].iloc[0]
+        user_row = REC_SYS.user_features_df[REC_SYS.user_features_df['user_id'] == user_id + WebAPIService.ID_OFFSET].iloc[0]
         genre_columns = [col for col in user_row.index if col.endswith('_avg')]
         liked_genres = [col.replace('_avg', '') for col in genre_columns if user_row[col] > 3.8]
     else:
-        genre_cols = [col.replace('_avg', '') for col in user_features_df.columns[1:]]
+        genre_cols = [col.replace('_avg', '') for col in REC_SYS.user_features_df.columns[1:]]
         liked_genres = [genre for genre, score in zip(genre_cols, user_features) if score > 3.8]
     
-    valid_genres = [genre for genre in liked_genres if genre in movie_features_df.columns]
+    valid_genres = [genre for genre in liked_genres if genre in REC_SYS.movie_features_df.columns]
     if not valid_genres:
         return REC_SYS.movie_scores.head(k)["movieId"].tolist()
     
-    mask = movie_features_df[valid_genres].sum(axis=1) > 0
-    matching_encoded_ids_set = set(movie_features_df.loc[mask, 'movie_id'].tolist())
+    mask = REC_SYS.movie_features_df[valid_genres].sum(axis=1) > 0
+    matching_encoded_ids_set = set(REC_SYS.movie_features_df.loc[mask, 'movie_id'].tolist())
 
     filtered_movies = REC_SYS.movie_scores[REC_SYS.movie_scores['encoded_id'].isin(matching_encoded_ids_set)]
     return filtered_movies.head(k)["movieId"].tolist()
@@ -32,11 +28,11 @@ def _get_top_k_two_tower_recommendations(target_user_id, k = 10):
     user_vector = REC_SYS.model.user_model.predict(np.array([target_user_id], dtype=np.int32), verbose=0)
     scores = np.dot(REC_SYS.movie_vectors, user_vector.T).flatten()
 
-    watched_movie_ids = interactions[interactions['user_id'] == target_user_id]['movie_id'].values
+    watched_movie_ids = REC_SYS.interactions[REC_SYS.interactions['user_id'] == target_user_id]['movie_id'].values
     scores[watched_movie_ids] = -999.0
     
     top_k_encoded_ids = np.argsort(scores)[::-1][:k]
-    return [ENCODED_TO_REAL_MOVIE_ID[idx] for idx in top_k_encoded_ids if idx in ENCODED_TO_REAL_MOVIE_ID]
+    return [REC_SYS.encoded_to_real_movie_id[idx] for idx in top_k_encoded_ids if idx in REC_SYS.encoded_to_real_movie_id]
 
 
 class RecommendationStrategy(ABC):
@@ -106,7 +102,7 @@ class RecommendationContext:
 
 
 def recommend_movies(user_id, user_features, top_k):
-    is_cold_start = (user_id + WebAPIService.ID_OFFSET) not in user_features_df['user_id'].values
+    is_cold_start = (user_id + WebAPIService.ID_OFFSET) not in REC_SYS.user_features_df['user_id'].values
     strategy = ColdStartRecommendationStrategy() if is_cold_start else NormalRecommendationStrategy(ratio=0.85)
     recommender = RecommendationContext(strategy)
         

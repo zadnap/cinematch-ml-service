@@ -2,9 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-
-PROCESSED_DATA_PATH = "ml/data/processed_data"
-RAW_DATA_PATH = "ml/data/raw_data"
+from ml.constants import PROCESSED_DATA_PATH
 
 interactions = pd.read_csv(os.path.join(PROCESSED_DATA_PATH, "positive_interactions.csv"))
 user_features_df = pd.read_csv(os.path.join(PROCESSED_DATA_PATH, "user_features.csv"))

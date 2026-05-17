@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from ml.constants import RAW_DATA_PATH
+from ml.constants import PROCESSED_DATA_PATH
 
 class IdMapper:
     _links_df = None
@@ -8,7 +8,7 @@ class IdMapper:
     @classmethod
     def get_links_df(cls) -> pd.DataFrame:
         if cls._links_df is None:
-            cls._links_df = pd.read_csv(os.path.join(RAW_DATA_PATH, "links.csv"))
+            cls._links_df = pd.read_csv(os.path.join(PROCESSED_DATA_PATH, "links.csv"))
         return cls._links_df
 
 

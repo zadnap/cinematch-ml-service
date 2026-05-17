@@ -72,8 +72,7 @@ class WebAPIService:
         if data is None:
                 return None
 
-        return [[row[0] + WebAPIService.ID_OFFSET] + row[1:] for row in data]
-
+        return [[int(row[0]) + WebAPIService.ID_OFFSET] + row[1:] for row in data[1:]] 
 
     @staticmethod
     def get_ratings():
@@ -81,7 +80,7 @@ class WebAPIService:
         if data is None:
             return None
         
-        return [[row[0] + WebAPIService.ID_OFFSET] + row[1:] for row in data]
+        return [[int(row[0]) + WebAPIService.ID_OFFSET] + row[1:] for row in data[1:]] 
 
 
     @staticmethod

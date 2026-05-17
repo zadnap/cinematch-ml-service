@@ -72,19 +72,13 @@ app_port: 7860
 - Download raw data from [Drive Folder](https://drive.google.com/drive/folders/1v8krf9hGEBqCKdN5wiwGD2WomEmvnqJQ?usp=share_link) and add them to ml/data/raw_data.
 - Create folder ml/artifacts, ml/data/processed_data, ml/data/database_data
 
-2. Preprocess raw data
-
-   ```bash
-   python -m ml.training.data_preprocessing
-   ```
-
-3. Train the model
+2. Train the model
 
    ```bash
    python -m ml.training.train
    ```
 
-4. Upload artifacts to Hugging Face Hub
+3. Upload artifacts to Hugging Face Hub
 
    ```bash
    python scripts/upload_artifacts.py

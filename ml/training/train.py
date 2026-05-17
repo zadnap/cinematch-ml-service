@@ -2,28 +2,20 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from keras.callbacks import ModelCheckpoint, EarlyStopping
+from ml.training.data_preprocessor import preprocessor
+from ml.constants import PROCESSED_DATA_PATH, ARTIFACTS_PATH
 
-# --- LẤY DỮ LIỆU TỪ DATABASE ---
-from ml.training.sync_data_from_db import (
-    sync_database_to_training_data
-)
-
-print("=== BƯỚC 1: ĐỒNG BỘ DỮ LIỆU TỪ DB ===")
-sync_database_to_training_data()
-print("Đã cập nhật xong các file CSV tĩnh (movies.csv, user_features.csv, ...)")
+preprocessor.process_and_sync_pipeline()
 
 # --- LẤY DỮ LIỆU TỪ FILE DATASET_LOADER ---
 from ml.training.dataset_loader import (
     train_dataset, val_dataset, test_dataset, 
     test_data, NUM_MOVIES,
-    user_features_df,
-    PROCESSED_DATA_PATH
+    user_features_df
 )
 
 # --- LẤY MÔ HÌNH TỪ FILE RECOMMENDER_MODEL ---
 from ml.models.two_towers_model import model
-
-ARTIFACTS_PATH = "ml/artifacts"
 
 checkpoint = ModelCheckpoint(
     os.path.join(ARTIFACTS_PATH, 'two_tower_best_weights.weights.h5'), 

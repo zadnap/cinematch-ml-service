@@ -20,7 +20,7 @@ upload_folder(
     repo_id=REPO_ID,
     repo_type="model",
     token=HF_TOKEN,
-    allow_patterns=["artifacts/*", "data/processed_data/*"]
+    allow_patterns=["artifacts/*", "data/processed_data/*"],
     ignore_patterns=[
         "**/__pycache__/**",
         "**/*.pyc",
