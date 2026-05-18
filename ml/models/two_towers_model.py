@@ -1,8 +1,8 @@
 import numpy as np
 import tensorflow as tf
 import tensorflow_recommenders as tfrs
-from keras.optimizers.legacy import Adam
-from keras.layers import (
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.layers import (
     Flatten,
     Input,
     Embedding,
@@ -11,8 +11,8 @@ from keras.layers import (
     Concatenate,
     UnitNormalization,
 )
-from keras.models import Model
-from keras.regularizers import l2
+from tensorflow.keras.models import Model
+from tensorflow.keras.regularizers import l2
 from sklearn.preprocessing import StandardScaler
 
 # --- LẤY BIẾN TỪ FILE DATASET_LOADER ---

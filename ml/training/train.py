@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from keras.callbacks import ModelCheckpoint, EarlyStopping
+from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 from ml.training.data_preprocessor import preprocessor
 from ml.constants import PROCESSED_DATA_PATH, ARTIFACTS_PATH
 

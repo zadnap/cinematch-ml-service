@@ -1,7 +1,6 @@
 jax==0.4.31
 jaxlib==0.4.31
 tensorflow==2.17.0
-keras==3.4.1
 tensorflow-recommenders==0.7.3
 
 ml_dtypes==0.4.1

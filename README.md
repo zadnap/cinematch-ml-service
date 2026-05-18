@@ -57,6 +57,7 @@ app_port: 7860
    REPO_ID=<your_hf_repo_id>
    CORS_ORIGINS=<web_service_url>
    WEB_API_URL=<web_service_url>
+   TF_USE_LEGACY_KERAS=1
    ```
 
 6. Run the server
