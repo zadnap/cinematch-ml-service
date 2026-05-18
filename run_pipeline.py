@@ -1,6 +1,10 @@
 import os
 import subprocess
 
+if os.path.exists("/kaggle/working"):
+    os.chdir("/kaggle/working")
+    print(f"Changed working directory to: {os.getcwd()}")
+
 os.environ["HF_TOKEN"] = os.environ.get("HF_TOKEN", "")
 os.environ["REPO_ID"] = "zadnap/cinematch-model"
 os.environ["CORS_ORIGINS"] = "https://cinematch-api-8fuj.onrender.com"
