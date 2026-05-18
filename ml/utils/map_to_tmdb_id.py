@@ -18,11 +18,10 @@ def map_to_tmdb_id(movie_ids):
         
     df = IdMapper.get_links_df()
     
-    return (
-        df[df["movieId"].isin(movie_ids)]
-        .set_index("movieId")
-        .loc[movie_ids, "tmdbId"]
-        .dropna()
-        .astype(int)
-        .tolist()
-    )
+    mapping_series = df.set_index("movieId")["tmdbId"]
+    
+    return [
+        int(mapping_series[mid]) 
+        for mid in movie_ids 
+        if mid in mapping_series.index and pd.notna(mapping_series[mid])
+    ]
