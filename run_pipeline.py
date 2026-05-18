@@ -1,9 +1,22 @@
 import os
 import subprocess
+import shutil
 
-if os.path.exists("/kaggle/working"):
-    os.chdir("/kaggle/working")
-    print(f"Changed working directory to: {os.getcwd()}")
+WORKING_DIR = "/kaggle/working"
+REPO_NAME = "cinematch-ml-service"
+REPO_PATH = os.path.join(WORKING_DIR, REPO_NAME)
+
+if os.path.exists(WORKING_DIR):
+    os.chdir(WORKING_DIR)
+    
+    if os.path.exists(REPO_PATH):
+        shutil.rmtree(REPO_PATH)
+
+print("=== Cloning repository from GitHub ===")
+subprocess.run(f"git clone https://github.com/zadnap/{REPO_NAME}.git", shell=True, check=True)
+
+os.chdir(REPO_PATH)
+print(f"Current working directory changed to: {os.getcwd()}")
 
 os.environ["HF_TOKEN"] = os.environ.get("HF_TOKEN", "")
 os.environ["REPO_ID"] = "zadnap/cinematch-model"
