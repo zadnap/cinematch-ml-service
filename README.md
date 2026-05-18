@@ -69,8 +69,9 @@ app_port: 7860
 
 1. Prepare data
 
-- Download raw data from [Drive Folder](https://drive.google.com/drive/folders/1v8krf9hGEBqCKdN5wiwGD2WomEmvnqJQ?usp=share_link) and add them to ml/data/raw_data.
-- Create folder ml/artifacts, ml/data/processed_data, ml/data/database_data
+   ```bash
+   python -m scripts/download_dataset.py
+   ```
 
 2. Train the model
 
