@@ -18,7 +18,15 @@ subprocess.run(f"git clone https://github.com/zadnap/{REPO_NAME}.git", shell=Tru
 os.chdir(REPO_PATH)
 print(f"Current working directory changed to: {os.getcwd()}")
 
-os.environ["HF_TOKEN"] = os.environ.get("HF_TOKEN", "")
+try:
+    from kaggle_secrets import UserSecretsClient
+    user_secrets = UserSecretsClient()
+    os.environ["HF_TOKEN"] = user_secrets.get_secret("HF_TOKEN")
+    print("=== Thành công: Đã cấu hình HF_TOKEN từ Kaggle Secrets ===")
+except Exception as e:
+    print(f"=== Cảnh báo: Không thể lấy HF_TOKEN từ Secrets ({e}). Thử lấy từ môi trường hiện tại ===")
+    os.environ["HF_TOKEN"] = os.environ.get("HF_TOKEN", "")
+
 os.environ["REPO_ID"] = "zadnap/cinematch-model"
 os.environ["CORS_ORIGINS"] = "https://cinematch-api-8fuj.onrender.com"
 os.environ["WEB_API_URL"] = "https://cinematch-api-8fuj.onrender.com"
