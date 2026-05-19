@@ -2,7 +2,7 @@ name: Run Kaggle Cinematch Trainer
 
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 5 * * *"
   workflow_dispatch:
 
 jobs:
@@ -39,3 +39,12 @@ jobs:
 
           export HF_TOKEN=$HF_TOKEN
           kaggle kernels push -p .
+
+      - name: Update Cron Schedule
+        uses: gr2m/set-cron-schedule-action@v2
+        with:
+          token: ${{ secrets.PAT_WITH_WORKFLOW_SCOPE }}
+          cron: |
+            0 5 * * *
+          workflow: run_kaggle.yml
+          message: "ci(kaggle): làm mới lịch chạy cron để tránh bị disable"
